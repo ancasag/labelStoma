@@ -1,7 +1,7 @@
 # LabelStoma
 LabelStoma is a graphical image tool for automatically detecting stomata in images. In addition, LabelStoma also provides the necessary tools to correct the detections. LabelStoma is based on the [LabelImg tool](https://github.com/tzutalin/labelImg).
 
-![TestTimeAugmentation](imagen/prueba1.png)
+![TestTimeAugmentation](imagen/labelStoma.png)
 
 ## Installation and Requirements
 
