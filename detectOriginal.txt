@@ -1,0 +1,32 @@
+#net = cv.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
+    net = cv.dnn.readNet(modelWeights, modelConfiguration)
+    net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
+    net.setPreferableTarget(cv.dnn.DNN_TARGET_CPU)
+    im = cv.VideoCapture(imagePath)
+    hasFrame, frame = im.read()
+    # Sets the input to the network
+
+    wI, hI, d = frame.shape
+    tam = min(wI, hI)
+    if tam >= 0 and tam <= 624:
+        inpWidth = 416
+        inpHeight = 416
+    elif tam > 624 and tam <= 1040:
+        inpWidth = 832
+        inpHeight = 832
+    else:
+        inpWidth = 1248
+        inpHeight = 1248
+    blob = cv.dnn.blobFromImage(frame, 1 / 255, (inpWidth, inpHeight), [0, 0, 0], 1, crop=False)
+    net.setInput(blob)
+    # Runs the forward pass to get output of the output layers
+    outs = net.forward(getOutputsNames(net))
+    boxes, confidences = postprocess(frame, outs, conf)
+
+    # Remove the bounding boxes with low confidence
+    #boxes = postprocess(frame, outs)
+
+    #wI, hI, d = frame.shape
+    file = open(imagePath[0:imagePath.rfind(".")] + ".xml", "w")
+    file.write(generateXML(imagePath[0:imagePath.rfind(".")], "", wI, hI, d, boxes, confidences))
+    file.close()
